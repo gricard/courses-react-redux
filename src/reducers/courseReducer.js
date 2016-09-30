@@ -6,10 +6,22 @@ export default function courseReducer(state = initialState.courses, action) {
         case types.LOAD_COURSES_SUCCESS:
             return action.courses;
 
-        case types.CREATE_COURSE:
+        case types.CREATE_COURSE_SUCCESS:
             // this is something like Ext.Apply()
-            return [...state,
-                    Object.assign({}, action.course)];
+            // it keeps the state immutable and copies our additional data into a copy of it
+            return [
+                ...state, // ES6 spread operator, explodes the values out into this array
+                Object.assign({}, action.course)
+            ];
+
+        case types.UPDATE_COURSE_SUCCESS:
+            return [
+                // get a list of all other courses
+                ...state.filter(course => course.id !== action.course.id),
+                // add in updated course
+                Object.assign({}, action.course)
+            ];
+
 
         default:
             return state;
