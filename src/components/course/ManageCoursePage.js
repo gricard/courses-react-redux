@@ -55,8 +55,20 @@ ManageCoursePage.contextTypes = {
     router: PropTypes.object // not required in order to avoid linting error from upcoming usage
 };
 
+function getCourseById(courses, id) {
+    const course = courses.filter(course => course.id === id);
+    if (course.length) return course[0]; // filtering returns an array
+    return null;
+}
+
 function mapStateToProps(state, ownProps) {
+    const courseId = ownProps.params.id; // id in path, e.g. /courses/:id
+
     let course = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
+
+    if (courseId && state.courses.length > 0) {
+        course = getCourseById(state.courses, courseId);
+    }
 
     // format for <SelectInput>
     const authorsFormattedForDropdown = state.authors.map(author => {
