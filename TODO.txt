@@ -1,0 +1,21 @@
+*1. Author administration
+
+2. Delete course
+
+3. Hide empty course list
+
+4. Unsaved changes message
+
+5. Client-side validation
+
+6. Handle 404 errors
+
+7. Show # courses in header
+
+8. Pagination
+
+9. Sort course table
+
+10. Revert abandoned changes
+
+
