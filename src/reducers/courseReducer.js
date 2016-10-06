@@ -24,7 +24,7 @@ export default function courseReducer(state = initialState.courses, action) {
 
         case types.DELETE_COURSE_SUCCESS:
             //console.log('reducer', action);
-            var newList = [
+            let newList = [
                 // get a list of all other courses
                 ...state.filter(course => course.id !== action.course.id)
             ];
