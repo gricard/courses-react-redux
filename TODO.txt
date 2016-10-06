@@ -19,3 +19,6 @@
 10. Revert abandoned changes
 
 
+- Display full author name on course list instead of the author id
+
+

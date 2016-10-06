@@ -4,6 +4,8 @@ import SelectInput from '../common/SelectInput';
 
 // TODO better spacing between buttons
 // TODO figure out delete button hidden attr
+//{hidden={course.id.length < 1}}
+
 const CourseForm = ({course, allAuthors, onSave, onDelete, onChange, saving, deleting, errors}) => {
     return (
         <form>
@@ -48,10 +50,9 @@ const CourseForm = ({course, allAuthors, onSave, onDelete, onChange, saving, del
 
             <input
                 type="submit"
-                hidden={course.id.length < 1}
                 disabled={deleting}
                 value={deleting ? 'Deleting...' : 'Delete'}
-                className="btn"
+                className="btn deleter"
                 onClick={onDelete}/>
         </form>
     );
