@@ -2,9 +2,9 @@ import React from 'react';
 import TextInput from '../common/TextInput';
 import SelectInput from '../common/SelectInput';
 
+// TODO better spacing between buttons
+// TODO figure out delete button hidden attr
 const CourseForm = ({course, allAuthors, onSave, onDelete, onChange, saving, deleting, errors}) => {
-    console.log('course id', course.id);
-    console.log('corse.id.len', course.id.length);
     return (
         <form>
             <h1>Manage Course</h1>
