@@ -2,7 +2,7 @@
 
 *2. Delete course
 
-3. Hide empty course list
+*3. Hide empty course list
 
 4. Unsaved changes message
 
