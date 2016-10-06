@@ -1,6 +1,6 @@
 *1. Author administration
 
-2. Delete course
+*2. Delete course
 
 3. Hide empty course list
 

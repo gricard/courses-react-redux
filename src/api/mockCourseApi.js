@@ -90,14 +90,12 @@ class CourseApi {
     });
   }
 
-  static deleteCourse(courseId) {
+  static deleteCourse(deleteCourse) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const indexOfCourseToDelete = courses.findIndex(course => {
-          course.courseId == courseId;
-        });
+        const indexOfCourseToDelete = courses.findIndex(course => course.id == deleteCourse.id);
         courses.splice(indexOfCourseToDelete, 1);
-        resolve();
+        resolve(deleteCourse);
       }, delay);
     });
   }

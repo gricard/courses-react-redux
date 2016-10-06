@@ -18,6 +18,15 @@ export function updateCourseSuccess(course) {
     return {type: types.UPDATE_COURSE_SUCCESS, course};
 }
 
+export function deleteCourseSuccess(course) {
+    //console.log('deleteCourseSuccess');
+    return {type: types.DELETE_COURSE_SUCCESS, course};
+}
+
+export function deleteCourseFailure(course) {
+    return {type: types.DELETE_COURSE_FAILURE, course};
+}
+
 export function loadCourses() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
@@ -38,6 +47,24 @@ export function saveCourse(course) {
             dispatch(createCourseSuccess(course));
         }).catch(error => {
 //            throw(error);
+            dispatch(ajaxCallError(error));
+        });
+    };
+}
+
+export function deleteCourse(course) {
+    //console.log('deleteCourse Action');
+    // getState below can be used to pull other data from app state without having to pass it in here
+    return function (dispatch, getState) {
+        dispatch(beginAjaxCall());
+        //console.log('begin dispatch', course);
+        return courseApi.deleteCourse(course).then(course => {
+            //console.log('ajax success', course);
+            dispatch(deleteCourseSuccess(course));
+            //console.log('dispatched deleteCourseSuccess');
+        }).catch(error => {
+            //            throw(error);
+            //console.log('ajax error', course);
             dispatch(ajaxCallError(error));
         });
     };
