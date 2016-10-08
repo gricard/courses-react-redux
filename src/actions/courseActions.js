@@ -27,9 +27,13 @@ export function deleteCourseFailure(course) {
     return {type: types.DELETE_COURSE_FAILURE, course};
 }
 
+
+//// THUNKS
+// handle asynchronous calls
+
 export function loadCourses() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(beginAjaxCall()); // increment ajax call count
         return courseApi.getAllCourses().then(courses => {
             dispatch(loadCoursesSuccess(courses));
         }).catch(error => {
@@ -41,7 +45,7 @@ export function loadCourses() {
 export function saveCourse(course) {
     // getState below can be used to pull other data from app state without having to pass it in here
     return function (dispatch, getState) {
-        dispatch(beginAjaxCall());
+        dispatch(beginAjaxCall()); // increment ajax call count
         return courseApi.saveCourse(course).then(course => {
             course.id ? dispatch(updateCourseSuccess(course)) :
             dispatch(createCourseSuccess(course));
@@ -56,7 +60,7 @@ export function deleteCourse(course) {
     //console.log('deleteCourse Action');
     // getState below can be used to pull other data from app state without having to pass it in here
     return function (dispatch, getState) {
-        dispatch(beginAjaxCall());
+        dispatch(beginAjaxCall()); // increment ajax call count
         //console.log('begin dispatch', course);
         return courseApi.deleteCourse(course).then(course => {
             //console.log('ajax success', course);

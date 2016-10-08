@@ -12,10 +12,6 @@ class AuthorsPage extends React.Component {
         this.redirectToAddAuthorPage = this.redirectToAddAuthorPage.bind(this);
     }
 
-    authorRow(author, index) {
-        return <div key={index}>{author.firstName} {author.lastName}</div>;
-    }
-
     redirectToAddAuthorPage() {
         browserHistory.push('/author');
     }

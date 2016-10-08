@@ -7,6 +7,7 @@ export default function configureStore(initialState) {
     return createStore(
         rootReducer,
         initialState,
+        // THUNK
         applyMiddleware(thunk, reduxImmutableStateInvariant())
     );
 }

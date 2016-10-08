@@ -13,6 +13,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/toastr/build/toastr.min.css';
 
 const store = configureStore();
+
+// call THUNKS to get data from API
 store.dispatch(loadCourses());
 store.dispatch(loadAuthors());
 
