@@ -58,7 +58,7 @@ export class ManageCoursePage extends React.Component {
         }
 
         this.setState({saving: true});
-        this.props.actions.saveCourse(this.state.course)
+        this.props.actions.callSaveCourse(this.state.course)
             .then(() => this.redirectSave())
             .catch(error => {
                 this.setState({saving: false});
@@ -75,9 +75,9 @@ export class ManageCoursePage extends React.Component {
         }
 
         this.setState({deleting: true});
-        this.props.actions.deleteCourse(this.state.course)
+        this.props.actions.callDeleteCourse(this.state.course)
             .then(() => {
-                //console.log('after deleteCourse action');
+                //console.log('after callDeleteCourse action');
                 this.redirectDelete();
                 //console.log('redirected');
             })
@@ -168,6 +168,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
     //console.log('mapDispatchToProps', dispatch);
     return {
+        // attach actions/THUNKS to props
         actions: bindActionCreators(courseActions, dispatch)
     };
 }

@@ -6,8 +6,8 @@ import { Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 import routes from './routes';
-import {loadCourses} from './actions/courseActions';
-import {loadAuthors} from './actions/authorActions';
+import {callLoadCourses} from './actions/courseActions';
+import {callLoadAuthors} from './actions/authorActions';
 import './styles/styles.css'; //Webpack can import CSS files too!
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/toastr/build/toastr.min.css';
@@ -15,8 +15,8 @@ import '../node_modules/toastr/build/toastr.min.css';
 const store = configureStore();
 
 // call THUNKS to get data from API
-store.dispatch(loadCourses());
-store.dispatch(loadAuthors());
+store.dispatch(callLoadCourses());
+store.dispatch(callLoadAuthors());
 
 render(
     <Provider store={store}>

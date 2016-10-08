@@ -31,7 +31,7 @@ export function deleteCourseFailure(course) {
 //// THUNKS
 // handle asynchronous calls
 
-export function loadCourses() {
+export function callLoadCourses() {
     return function(dispatch) {
         dispatch(beginAjaxCall()); // increment ajax call count
         return courseApi.getAllCourses().then(courses => {
@@ -42,7 +42,7 @@ export function loadCourses() {
     };
 }
 
-export function saveCourse(course) {
+export function callSaveCourse(course) {
     // getState below can be used to pull other data from app state without having to pass it in here
     return function (dispatch, getState) {
         dispatch(beginAjaxCall()); // increment ajax call count
@@ -56,8 +56,8 @@ export function saveCourse(course) {
     };
 }
 
-export function deleteCourse(course) {
-    //console.log('deleteCourse Action');
+export function callDeleteCourse(course) {
+    //console.log('callDeleteCourse Action');
     // getState below can be used to pull other data from app state without having to pass it in here
     return function (dispatch, getState) {
         dispatch(beginAjaxCall()); // increment ajax call count

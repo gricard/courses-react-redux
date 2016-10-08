@@ -19,7 +19,10 @@ export function updateAuthorSuccess(author) {
     return {type: types.UPDATE_AUTHOR_SUCCESS, author};
 }
 
-export function saveAuthor(author) {
+//// THUNKS
+// handle ajax calls
+
+export function callSaveAuthor(author) {
     // getState below can be used to pull other data from app state without having to pass it in here
     return function (dispatch, getState) {
         dispatch(beginAjaxCall());
@@ -33,7 +36,7 @@ export function saveAuthor(author) {
     };
 }
 
-export function loadAuthors() {
+export function callLoadAuthors() {
     return dispatch => {
         dispatch(beginAjaxCall());
         return authorApi.getAllAuthors().then(authors => {
