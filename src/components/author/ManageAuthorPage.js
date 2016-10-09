@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import {connect as reduxConnect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as authorActions from '../../actions/authorActions';
 import AuthorForm from './AuthorForm';
@@ -10,14 +10,16 @@ export class ManageAuthorPage extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        // initial state
         this.state = {
             author: Object.assign({}, props.author),
             errors: {},
             saving: false
         };
 
-        this.updateAuthorState = this.updateAuthorState.bind(this);
-        this.saveAuthor = this.saveAuthor.bind(this);
+        // have to bind scope to each of the action functions
+        this.handleUpdateAuthorState = this.handleUpdateAuthorState.bind(this);
+        this.handleSaveAuthor = this.handleSaveAuthor.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -28,13 +30,32 @@ export class ManageAuthorPage extends React.Component {
         }
     }
 
-    updateAuthorState(event) {
+    //// Handlers
+    // handle component events
+    handleUpdateAuthorState(event) {
         const field = event.target.name;
         let author = this.state.author;
         author[field] = event.target.value;
         return this.setState({author: author});
     }
 
+    handleSaveAuthor(event) {
+        event.preventDefault();
+
+        if (!this.authorFormIsValid()) {
+            return;
+        }
+
+        this.setState({saving: true});
+        this.props.actions.callSaveAuthor(this.state.author)
+            .then(() => this.redirect())
+            .catch(error => {
+                this.setState({saving: false});
+                toastr.error(error);
+            });
+    }
+
+    //// Helpers/utilities
     authorFormIsValid() {
         let formIsValid = true;
         let errors = {};
@@ -53,22 +74,6 @@ export class ManageAuthorPage extends React.Component {
         return formIsValid;
     }
 
-    saveAuthor(event) {
-        event.preventDefault();
-
-        if (!this.authorFormIsValid()) {
-            return;
-        }
-
-        this.setState({saving: true});
-        this.props.actions.callSaveAuthor(this.state.author)
-            .then(() => this.redirect())
-            .catch(error => {
-                this.setState({saving: false});
-                toastr.error(error);
-            });
-    }
-
     redirect() {
         this.setState({saving: false});
         toastr.success('Author saved');
@@ -76,11 +81,13 @@ export class ManageAuthorPage extends React.Component {
         this.context.router.push('/authors');
     }
 
+
+    //// REACT RENDER
     render() {
         return (
             <AuthorForm
-                onChange={this.updateAuthorState}
-                onSave={this.saveAuthor}
+                onChange={this.handleUpdateAuthorState}
+                onSave={this.handleSaveAuthor}
                 author={this.state.author}
                 errors={this.state.errors}
                 saving={this.state.saving}
@@ -126,4 +133,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageAuthorPage);
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(ManageAuthorPage);

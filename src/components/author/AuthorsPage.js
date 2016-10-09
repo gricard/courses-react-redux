@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import {connect as reduxConnect} from 'react-redux';
 import * as authorActions from '../../actions/authorActions';
 import AuthorList from './AuthorList';
 import {browserHistory} from 'react-router';
@@ -9,13 +9,17 @@ class AuthorsPage extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.redirectToAddAuthorPage = this.redirectToAddAuthorPage.bind(this);
+        // hook up scope
+        this.handleRedirectToAddAuthorPage = this.handleRedirectToAddAuthorPage.bind(this);
     }
 
-    redirectToAddAuthorPage() {
+    //// Handlers
+    // hanle component events
+    handleRedirectToAddAuthorPage() {
         browserHistory.push('/author');
     }
 
+    //// REACT RENDER
     render() {
         // destructuring
         // could also do authors = this.props.authors
@@ -27,7 +31,7 @@ class AuthorsPage extends React.Component {
                 <input type="submit"
                     value="Add Author"
                     className="btn btn-primary"
-                    onClick={this.redirectToAddAuthorPage}
+                    onClick={this.handleRedirectToAddAuthorPage}
                     />
                 <AuthorList authors={authors} />
             </div>
@@ -40,13 +44,14 @@ AuthorsPage.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-// connect data from state to properties for components
+// REDUX connect data from state to properties for components
 function mapStateToProps(state, ownProps) {
     return {
         authors: state.authors // connected to label in root reducer
     };
 }
 
+// REDUX
 function mapDispatchToProps(dispatch) {
     return {
 //        createAuthor: (author) => dispatch(authorActions.createAuthor(author))
@@ -60,4 +65,5 @@ function mapDispatchToProps(dispatch) {
 //export default connectedStateAndProps(AuthorsPage);
 
 // ignore dispatch for now and use default
-export default connect(mapStateToProps, mapDispatchToProps)(AuthorsPage);
+// REDUX - connect component
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(AuthorsPage);

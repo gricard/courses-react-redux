@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import {connect as reduxConnect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseForm from './CourseForm';
@@ -10,6 +10,7 @@ export class ManageCoursePage extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        // initial component state
         this.state = {
             course: Object.assign({}, props.course),
             errors: {},
@@ -17,9 +18,10 @@ export class ManageCoursePage extends React.Component {
             deleting: false
         };
 
-        this.updateCourseState = this.updateCourseState.bind(this);
-        this.saveCourse = this.saveCourse.bind(this);
-        this.deleteCourse = this.deleteCourse.bind(this);
+        // have to bind scope to each of the action functions
+        this.handleUpdateCourseState = this.handleUpdateCourseState.bind(this);
+        this.handleSaveCourse = this.handleSaveCourse.bind(this);
+        this.handleDeleteCourse = this.handleDeleteCourse.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -30,27 +32,16 @@ export class ManageCoursePage extends React.Component {
         }
     }
 
-    updateCourseState(event) {
+    //// Handlers
+    // handle events from components
+    handleUpdateCourseState(event) {
         const field = event.target.name;
         let course = this.state.course;
         course[field] = event.target.value;
         return this.setState({course: course});
     }
 
-    courseFormIsValid() {
-        let formIsValid = true;
-        let errors = {};
-
-        if (this.state.course.title.length < 5) {
-            errors.title = 'Title must be at least 5 characters.';
-            formIsValid = false;
-        }
-
-        this.setState({errors: errors});
-        return formIsValid;
-    }
-
-    saveCourse(event) {
+    handleSaveCourse(event) {
         event.preventDefault();
 
         if (!this.courseFormIsValid()) {
@@ -66,7 +57,7 @@ export class ManageCoursePage extends React.Component {
             });
     }
 
-    deleteCourse(event) {
+    handleDeleteCourse(event) {
         //console.log('onDelete event', event);
         event.preventDefault();
 
@@ -86,6 +77,21 @@ export class ManageCoursePage extends React.Component {
                 this.setState({deleting: false});
                 toastr.error(error);
             });
+    }
+
+
+    //// Helper/utility functions
+    courseFormIsValid() {
+        let formIsValid = true;
+        let errors = {};
+
+        if (this.state.course.title.length < 5) {
+            errors.title = 'Title must be at least 5 characters.';
+            formIsValid = false;
+        }
+
+        this.setState({errors: errors});
+        return formIsValid;
     }
 
     redirectSave() {
@@ -110,9 +116,9 @@ export class ManageCoursePage extends React.Component {
         return (
             <CourseForm
                 allAuthors={this.props.authors}
-                onChange={this.updateCourseState}
-                onSave={this.saveCourse}
-                onDelete={this.deleteCourse}
+                onChange={this.handleUpdateCourseState}
+                onSave={this.handleSaveCourse}
+                onDelete={this.handleDeleteCourse}
                 course={this.state.course}
                 errors={this.state.errors}
                 saving={this.state.saving}
@@ -122,6 +128,7 @@ export class ManageCoursePage extends React.Component {
     }
 }
 
+// TODO why are these done after it's declared again?
 ManageCoursePage.propTypes =  {
     course: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
@@ -133,13 +140,16 @@ ManageCoursePage.contextTypes = {
     router: PropTypes.object // not required in order to avoid linting error from upcoming usage
 };
 
+
+// REDUX setup
+
 function getCourseById(courses, id) {
     const course = courses.filter(course => course.id === id);
     if (course.length) return course[0]; // filtering returns an array
     return null;
 }
 
-// copy app state into properties used by components
+// REDUX copy app state into properties used by components
 function mapStateToProps(state, ownProps) {
     //console.log('mapStateToProps', state);
     const courseId = ownProps.params.id; // id in path, e.g. /courses/:id
@@ -166,7 +176,7 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-// link action props to store dispatcher
+// REDUX link action props to store dispatcher
 // (when user clicks a button, it dispatches an action to the store)
 function mapDispatchToProps(dispatch) {
     //console.log('mapDispatchToProps', dispatch);
@@ -176,4 +186,5 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursePage);
+// REDUX - connect() hooks the component up to redux to give it state and actions
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(ManageCoursePage);

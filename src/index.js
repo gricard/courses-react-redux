@@ -18,6 +18,7 @@ const store = configureStore();
 store.dispatch(callLoadCourses());
 store.dispatch(callLoadAuthors());
 
+// REDUX - Provider connects entire app to redux store
 render(
     <Provider store={store}>
         <Router history={browserHistory} routes={routes} />

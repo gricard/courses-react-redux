@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import {connect as reduxConnect} from 'react-redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseList from './CourseList';
 import {browserHistory} from 'react-router';
@@ -9,14 +9,16 @@ class CoursesPage extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
+        // have to bind scope to each of the action functions
+        // this is done here so we don't have to bind it in render() (which would create a new bound func each time)
+        // and has to be done, otherwise 'this' in our handlers would resolve to the component calling it
+        this.handleRedirectToAddCoursePage = this.handleRedirectToAddCoursePage.bind(this);
+        // this one actually doesn't need to be bound because it doesn't reference 'this' at all
     }
 
-    courseRow(course, index) {
-        return <div key={index}>{course.title}</div>;
-    }
-
-    redirectToAddCoursePage() {
+    //// Handlers
+    // handle component events
+    static handleRedirectToAddCoursePage() {
         browserHistory.push('/course');
     }
 
@@ -31,7 +33,7 @@ class CoursesPage extends React.Component {
                 <input type="submit"
                     value="Add Course"
                     className="btn btn-primary"
-                    onClick={this.redirectToAddCoursePage}
+                    onClick={this.handleRedirectToAddCoursePage}
                     />
                 {courses.length > 0 && <CourseList courses={courses} />}
             </div>
@@ -44,13 +46,15 @@ CoursesPage.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-// connect data from state to properties for components
+// REDUX connect data from state to properties for components
 function mapStateToProps(state, ownProps) {
     return {
         courses: state.courses // connected to label in root reducer
     };
 }
 
+
+// REDUX
 function mapDispatchToProps(dispatch) {
     return {
 //        createCourse: (course) => dispatch(courseActions.createCourse(course))
@@ -59,9 +63,24 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-// more verbose wau
+// more verbose way
 //const connectedStateAndProps = connect(mapStateToProps, mapDispatchToProps);
 //export default connectedStateAndProps(CoursesPage);
 
-// ignore dispatch for now and use default
-export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+// ATTACHING DISPATCH
+//
+// normal action dispatch would be using this.props.dispatch(handlerMethod()); from the component
+// this requires you do not pass a mapDispatchToProps argument to connect
+//
+// or you can explicitly setup each individual action:
+//
+// function mapDispatchToProps(dispatch) {
+//      return {
+//          loadCourses: () => {
+//              dispatch(loadCourses());
+//          }
+//      };
+// }
+
+// Hook up component to REDUX
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(CoursesPage);

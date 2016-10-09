@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 
-// increments ajax call count_SUCCESS actions
+// increments ajax call count / _SUCCESS actions
 export function beginAjaxCall() {
   return {type: types.BEGIN_AJAX_CALL};
 }

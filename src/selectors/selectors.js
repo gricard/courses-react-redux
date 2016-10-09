@@ -1,11 +1,7 @@
+//// what was the point of making this separate again?
+
 export function authorsFormattedForDropdown(authors) {
-    // TODO replace below with authorFormattedForDropdown
-    return authors.map(author => {
-        return {
-            value: author.id,
-            text: author.firstName + ' ' + author.lastName
-        };
-    });
+    return authors.map(authorFormattedForDropdown);
 }
 
 export function authorFormattedForDropdown(author) {
