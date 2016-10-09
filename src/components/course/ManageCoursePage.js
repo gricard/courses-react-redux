@@ -139,6 +139,7 @@ function getCourseById(courses, id) {
     return null;
 }
 
+// copy app state into properties used by components
 function mapStateToProps(state, ownProps) {
     //console.log('mapStateToProps', state);
     const courseId = ownProps.params.id; // id in path, e.g. /courses/:id
@@ -165,6 +166,8 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
+// link action props to store dispatcher
+// (when user clicks a button, it dispatches an action to the store)
 function mapDispatchToProps(dispatch) {
     //console.log('mapDispatchToProps', dispatch);
     return {
