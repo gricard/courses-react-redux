@@ -6,6 +6,7 @@ import CourseList from './CourseList';
 import {browserHistory} from 'react-router';
 
 class CoursesPage extends React.Component {
+    // constructor has to come after handlers it modifies
     constructor(props, context) {
         super(props, context);
 
@@ -18,7 +19,8 @@ class CoursesPage extends React.Component {
 
     //// Handlers
     // handle component events
-    static handleRedirectToAddCoursePage() {
+    // don't make this static, ignore phpstorm
+    handleRedirectToAddCoursePage() {
         browserHistory.push('/course');
     }
 
