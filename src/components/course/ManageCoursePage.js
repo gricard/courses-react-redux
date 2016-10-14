@@ -88,10 +88,6 @@ export const ManageCoursePage = React.createClass({
         //console.log('onDelete event', event);
         event.preventDefault();
 
-        if (!this.courseFormIsValid()) {
-            return;
-        }
-
         this.setState({deleting: true});
         this.props.actions.callDeleteCourse(this.state.course)
             .then(() => {
