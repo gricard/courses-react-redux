@@ -4,7 +4,7 @@
 
 *3. Hide empty course list
 
-4. Unsaved changes message
+*4. Unsaved changes message
 
 5. Client-side validation
 
