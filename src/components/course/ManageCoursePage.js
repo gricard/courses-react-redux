@@ -6,23 +6,35 @@ import CourseForm from './CourseForm';
 import { authorsFormattedForDropdown } from '../../selectors/selectors';
 import toastr from 'toastr';
 
-export class ManageCoursePage extends React.Component {
-    constructor(props, context) {
-        super(props, context);
 
+// DO NOT WRAP IN withRouter
+// not necessary, and it breaks this.state somehow
+export const ManageCoursePage = React.createClass({
+
+    // createClass uses this instead of constructor
+    getInitialState() {
         // initial component state
-        this.state = {
-            course: Object.assign({}, props.course),
+        return {
+            course: Object.assign({}, this.props.course),
             errors: {},
             saving: false,
             deleting: false
         };
 
-        // have to bind scope to each of the action functions
-        this.handleUpdateCourseState = this.handleUpdateCourseState.bind(this);
-        this.handleSaveCourse = this.handleSaveCourse.bind(this);
-        this.handleDeleteCourse = this.handleDeleteCourse.bind(this);
-    }
+        // don't need to bind when using createClass()
+    },
+
+    // need to use componentWillMount instead of componentDidMount
+    // when using with createClass
+    // so that we get access to the context
+    componentWillMount(nextProps, nextContext) {
+        if (this.context.router) {
+            this.context.router.setRouteLeaveHook(
+                this.props.route,
+                this.routerWillLeave
+            );
+        }
+    },
 
     componentWillReceiveProps(nextProps) {
         // only override the course when we're loading a new one
@@ -30,7 +42,14 @@ export class ManageCoursePage extends React.Component {
             // populate form when course is loaded directly
             this.setState({course: Object.assign({}, nextProps.course)}); // make a copy of the course
         }
-    }
+    },
+
+    routerWillLeave(nextLocation) {
+      // return false to prevent a transition w/o prompting the user,
+      // or return a string to allow the user to decide:
+      if (this.state.dirty)
+        return 'Your work is not saved! Are you sure you want to leave?';
+    },
 
     //// Handlers
     // handle events from components
@@ -38,8 +57,13 @@ export class ManageCoursePage extends React.Component {
         const field = event.target.name;
         let course = this.state.course;
         course[field] = event.target.value;
-        return this.setState({course: course});
-    }
+
+        // TODO keep a copy of the original data and actually compare changes instead of just assuming it changed
+        // if user changes it and then edits it back to normal the form will still think it's dirty
+
+        // mark state as dirty so we can trigger a leave page handler
+        return this.setState({course: course, dirty: true});
+    },
 
     handleSaveCourse(event) {
         event.preventDefault();
@@ -50,12 +74,15 @@ export class ManageCoursePage extends React.Component {
 
         this.setState({saving: true});
         this.props.actions.callSaveCourse(this.state.course)
-            .then(() => this.redirectSave())
+            .then(() => {
+                this.setState({dirty: false});
+                this.redirectSave();
+            })
             .catch(error => {
                 this.setState({saving: false});
                 toastr.error(error);
             });
-    }
+    },
 
     handleDeleteCourse(event) {
         //console.log('onDelete event', event);
@@ -69,6 +96,7 @@ export class ManageCoursePage extends React.Component {
         this.props.actions.callDeleteCourse(this.state.course)
             .then(() => {
                 //console.log('after callDeleteCourse action');
+                this.setState({dirty: false});
                 this.redirectDelete();
                 //console.log('redirected');
             })
@@ -77,7 +105,7 @@ export class ManageCoursePage extends React.Component {
                 this.setState({deleting: false});
                 toastr.error(error);
             });
-    }
+    },
 
 
     //// Helper/utility functions
@@ -92,24 +120,24 @@ export class ManageCoursePage extends React.Component {
 
         this.setState({errors: errors});
         return formIsValid;
-    }
+    },
 
     redirectSave() {
         this.setState({saving: false});
         this.redirect('Course Saved');
-    }
+    },
 
     redirectDelete() {
         //console.log('redirect delete');
         this.setState({deleting: false});
         this.redirect('Course Deleted');
-    }
+    },
 
     redirect(msg) {
         toastr.success(msg);
         // redirect to courses page after save
         this.context.router.push('/courses');
-    }
+    },
 
     render() {
         //console.log('rendering');
@@ -125,20 +153,20 @@ export class ManageCoursePage extends React.Component {
                 deleting={this.state.deleting}
             />
         );
+    },
+
+    // these go in the class body when using createClass
+    propTypes: {
+        course: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired,
+        authors: PropTypes.array.isRequired
+    },
+
+    // pull in react router context so router is available on this.context.router
+    contextTypes: {
+        router: PropTypes.object // not required in order to avoid linting error from upcoming usage
     }
-}
-
-// TODO why are these done after it's declared again?
-ManageCoursePage.propTypes =  {
-    course: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired,
-    authors: PropTypes.array.isRequired
-};
-
-// pull in react router context so router is available on this.context.router
-ManageCoursePage.contextTypes = {
-    router: PropTypes.object // not required in order to avoid linting error from upcoming usage
-};
+});
 
 
 // REDUX setup
