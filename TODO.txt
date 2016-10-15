@@ -6,9 +6,11 @@
 
 *4. Unsaved changes message
 
-5. Client-side validation
+5. Client-side validation    -- this is already implemented?
 
-6. Handle 404 errors
+*6. Handle 404 errors
+
+    6a. Add code to check for spelling errors or related pages?
 
 7. Show # courses in header
 

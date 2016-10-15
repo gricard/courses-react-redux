@@ -5,6 +5,7 @@ import HomePage from './components/home/HomePage';
 import AboutPage from './components/about/AboutPage';
 import CoursesPage from './components/course/CoursesPage';
 import AuthorsPage from './components/author/AuthorsPage';
+import NotFoundPage from './components/common/NotFoundPage';
 import ManageCoursePage from './components/course/ManageCoursePage';  //eslint-disable-line import/no-named-as-default
 import ManageAuthorPage from './components/author/ManageAuthorPage';  //eslint-disable-line import/no-named-as-default
 
@@ -18,5 +19,6 @@ export default (
         <Route path="author" component={ManageAuthorPage} />
         <Route path="author/:id" component={ManageAuthorPage} />
         <Route path="about" component={AboutPage} />
+        <Route path="*" component={NotFoundPage}/>
     </Route>
 );
