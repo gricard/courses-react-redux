@@ -10,6 +10,7 @@ class App extends React.Component {
                 <Header
                     loading={this.props.loading}
                     courses={this.props.courses}
+                    authors={this.props.authors}
                 />
                 {this.props.children}
             </div>
@@ -20,7 +21,8 @@ class App extends React.Component {
 App.propTypes = {
     children: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
-    courses: PropTypes.array.isRequired
+    courses: PropTypes.array.isRequired,
+    authors: PropTypes.array.isRequired
 };
 
 
@@ -28,7 +30,8 @@ App.propTypes = {
 function mapStateToProps(state, ownProps) {
     return {
         loading: state.ajaxCallsInProgress > 0,
-        courses: state.courses
+        courses: state.courses,
+        authors: state.authors
     };
 }
 

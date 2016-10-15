@@ -1,12 +1,15 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
-const CourseListRow = ({course}) => {
+const CourseListRow = ({course, authors}) => {
+    let author = authors.find((author, index, list) => author.id === course.authorId, this);
+    let authorName = author ? author.firstName + ' ' + author.lastName : 'Unknown Author';
+
     return (
         <tr>
             <td><a href={course.watchHref} target="_blank">Watch</a></td>
             <td><Link to={'/course/' + course.id}>{course.title}</Link></td>
-            <td>{course.authorId}</td>
+            <td>{authorName}</td>
             <td>{course.category}</td>
             <td>{course.length}</td>
         </tr>

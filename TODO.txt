@@ -20,7 +20,7 @@
 
 10. Revert abandoned changes    -- what does this even mean?
 
-- Display full author name on course list instead of the author id
+*- Display full author name on course list instead of the author id
 
 - react-bootstrap integration
 

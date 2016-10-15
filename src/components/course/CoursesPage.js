@@ -27,7 +27,7 @@ class CoursesPage extends React.Component {
     render() {
         // destructuring
         // could also do courses = this.props.courses
-        const {courses} = this.props;
+        const {courses, authors} = this.props;
 
         return (
             <div>
@@ -37,7 +37,7 @@ class CoursesPage extends React.Component {
                     className="btn btn-primary"
                     onClick={this.handleRedirectToAddCoursePage}
                     />
-                {courses.length > 0 && <CourseList courses={courses} />}
+                {courses.length > 0 && <CourseList courses={courses} authors={authors} />}
             </div>
         );
     }
@@ -45,13 +45,15 @@ class CoursesPage extends React.Component {
 
 CoursesPage.propTypes = {
     courses: PropTypes.array.isRequired,
+    authors: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 // REDUX connect data from state to properties for components
 function mapStateToProps(state, ownProps) {
     return {
-        courses: state.courses // connected to label in root reducer
+        courses: state.courses, // connected to label in root reducer
+        authors: state.authors
     };
 }
 
