@@ -3,11 +3,13 @@ import { Link, IndexLink } from 'react-router';
 import LoadingDots from './LoadingDots';
 
 const Header = ({loading, courses}) => {
-    let courseLink, courseSpacer;
+    let courseLink,
+        numCourses = courses.length + 0;
 
-    if (courses.length > 0) {
+    // can't do a goddamn IF inside JSX? fuck you!
+    if (numCourses > 0) {
         // for sure this is totally obnoxious...
-        courseLink = <Link to="/courses" activeClassName="active">Courses</Link>;
+        courseLink = <Link to="/courses" activeClassName="active">Courses ({numCourses})</Link>;
         // i can't fucking include this in the link above because there can only be one top level element lulz
     } else {
         // add an "Add Course" button in its place

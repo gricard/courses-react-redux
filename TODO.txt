@@ -12,7 +12,7 @@
 
     6a. Add code to check for spelling errors or related pages?
 
-7. Show # courses in header
+*7. Show # courses in header
 
 8. Pagination
 
