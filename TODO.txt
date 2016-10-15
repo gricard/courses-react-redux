@@ -24,3 +24,5 @@
 
 - react-bootstrap integration
 
+- fix sticky mouseover/hover style on header links after clicking them
+
