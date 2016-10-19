@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions.js';
+import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import authorApi from '../api/mockAuthorApi';
 
 

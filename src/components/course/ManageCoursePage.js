@@ -9,7 +9,19 @@ import toastr from 'toastr';
 
 // DO NOT WRAP IN withRouter
 // not necessary, and it breaks this.state somehow
-export const ManageCoursePage = React.createClass({
+export const ManageCoursePage = React.createClass({ //eslint-disable-line react/prefer-es6-class
+    // these go in the class body when using createClass
+    propTypes: {
+        course: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired,
+        authors: PropTypes.array.isRequired,
+        route: PropTypes.object.isRequired
+    },
+
+    // pull in react router context so router is available on this.context.router
+    contextTypes: {
+        router: PropTypes.object // not required in order to avoid linting error from upcoming usage
+    },
 
     // createClass uses this instead of constructor
     getInitialState() {
@@ -149,18 +161,6 @@ export const ManageCoursePage = React.createClass({
                 deleting={this.state.deleting}
             />
         );
-    },
-
-    // these go in the class body when using createClass
-    propTypes: {
-        course: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired,
-        authors: PropTypes.array.isRequired
-    },
-
-    // pull in react router context so router is available on this.context.router
-    contextTypes: {
-        router: PropTypes.object // not required in order to avoid linting error from upcoming usage
     }
 });
 
