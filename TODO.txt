@@ -18,7 +18,7 @@
 
 9. Sort course table
 
-10. Revert abandoned changes    -- what does this even mean?
+10. Revert abandoned changes
 
 *- Display full author name on course list instead of the author id
 
