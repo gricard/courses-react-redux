@@ -2,7 +2,8 @@
 
 > A react/redux project
 
-This is a react/redux application I made while participating in Corey House's React/Redux course on Pluralsight 
+This is a react/redux application I implemented while participating in [Corey House](https://github.com/coryhouse)'s excellent [React/Redux course on Pluralsight](https://www.pluralsight.com/courses/react-redux-react-router-es6). 
+This includes some of the completed additional assignments from the end of the course.
 
 ## Build Setup
 
@@ -15,17 +16,13 @@ npm install
 yarn install
 
 # serve with hot reload at localhost:8080
-npm run dev
+npm run start
 
 # build for production with minification
 npm run build
-
-# run unit tests
-npm run unit
 
 # run all tests
 npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
+Note: This is not a real, full application. It was just an educational exercise. I'm making it public only because it could be helpful to others.
