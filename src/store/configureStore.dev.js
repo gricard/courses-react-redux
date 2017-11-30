@@ -7,10 +7,21 @@ import thunk from "redux-thunk";
 // single store for all data
 export default function configureStore(initialState) {
     // register all reducers with the store
-    return createStore(
+    const store = createStore(
         rootReducer,
         initialState,
         // THUNK
         applyMiddleware(thunk, reduxImmutableStateInvariant()),
     );
+
+
+    if (process.env.NODE_ENV !== "production") {
+        if (module.hot) {
+            module.hot.accept('../reducers/index', () => {
+                store.replaceReducer(rootReducer)
+            })
+        }
+    }
+
+    return store;
 }

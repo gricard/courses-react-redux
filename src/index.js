@@ -24,3 +24,14 @@ render(
     </BrowserRouter>,
     document.getElementById("app"),
 );
+
+if (module.hot) {
+    module.hot.accept('./components/App', () => {
+        render(
+            <BrowserRouter>
+                <App store={store} />
+            </BrowserRouter>,
+            document.getElementById("app"),
+        )
+    })
+}
