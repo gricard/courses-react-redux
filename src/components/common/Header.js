@@ -45,16 +45,20 @@ const Header = ({ loading, courses, authors }) => {
         );
     }
 
+    const navSeparator = " | ";
     return (
         <nav>
-            <NavLink to={"/"} activeClassName="active">
+            <NavLink exact to={"/"} activeClassName="active">
                 Home
             </NavLink>
-            {" | "}
+            {navSeparator}
+
             {courseLink}
-            {" | "}
+            {navSeparator}
+
             {authorLink}
-            {" | "}
+            {navSeparator}
+
             <NavLink to="/about" activeClassName="active">
                 About
             </NavLink>
