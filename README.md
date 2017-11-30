@@ -5,7 +5,7 @@
 This is a react/redux application I implemented while participating in [Corey House](https://github.com/coryhouse)'s excellent [React/Redux course on Pluralsight](https://www.pluralsight.com/courses/react-redux-react-router-es6). 
 This includes some of the completed additional assignments from the end of the course.
 
-Now based on create-react-app
+Now based on [create-react-app](https://github.com/facebookincubator/create-react-app)
 
 ## Build Setup
 
