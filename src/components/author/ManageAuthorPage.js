@@ -1,10 +1,11 @@
-import React, {PropTypes} from 'react';
-import {connect as reduxConnect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import * as authorActions from '../../actions/authorActions';
-import AuthorForm from './AuthorForm';
-import { authorsFormattedForDropdown } from '../../selectors/selectors';
-import toastr from 'toastr';
+import PropTypes from "prop-types";
+import React from "react";
+import { connect as reduxConnect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as authorActions from "../../actions/authorActions";
+import AuthorForm from "./AuthorForm";
+//import { authorsFormattedForDropdown } from '../../selectors/selectors';
+import toastr from "toastr";
 
 export class ManageAuthorPage extends React.Component {
     constructor(props, context) {
@@ -14,7 +15,7 @@ export class ManageAuthorPage extends React.Component {
         this.state = {
             author: Object.assign({}, props.author),
             errors: {},
-            saving: false
+            saving: false,
         };
 
         // have to bind scope to each of the action functions
@@ -24,9 +25,9 @@ export class ManageAuthorPage extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         // only override the author when we're loading a new one
-        if (this.props.author.id != nextProps.author.id) {
+        if (this.props.author.id !== nextProps.author.id) {
             // populate form when author is loaded directly
-            this.setState({author: Object.assign({}, nextProps.author)}); // make a copy of the author
+            this.setState({ author: Object.assign({}, nextProps.author) }); // make a copy of the author
         }
     }
 
@@ -36,7 +37,7 @@ export class ManageAuthorPage extends React.Component {
         const field = event.target.name;
         let author = this.state.author;
         author[field] = event.target.value;
-        return this.setState({author: author});
+        return this.setState({ author: author });
     }
 
     handleSaveAuthor(event) {
@@ -46,11 +47,12 @@ export class ManageAuthorPage extends React.Component {
             return;
         }
 
-        this.setState({saving: true});
-        this.props.actions.callSaveAuthor(this.state.author)
+        this.setState({ saving: true });
+        this.props.actions
+            .callSaveAuthor(this.state.author)
             .then(() => this.redirect())
             .catch(error => {
-                this.setState({saving: false});
+                this.setState({ saving: false });
                 toastr.error(error);
             });
     }
@@ -61,26 +63,25 @@ export class ManageAuthorPage extends React.Component {
         let errors = {};
 
         if (this.state.author.firstName.length < 3) {
-            errors.firstName = 'First Name must be at least 3 characters.';
+            errors.firstName = "First Name must be at least 3 characters.";
             formIsValid = false;
         }
 
         if (this.state.author.lastName.length < 3) {
-            errors.lastName = 'Last Name must be at least 3 characters.';
+            errors.lastName = "Last Name must be at least 3 characters.";
             formIsValid = false;
         }
 
-        this.setState({errors: errors});
+        this.setState({ errors: errors });
         return formIsValid;
     }
 
     redirect() {
-        this.setState({saving: false});
-        toastr.success('Author saved');
+        this.setState({ saving: false });
+        toastr.success("Author saved");
         // redirect to authors page after save
-        this.context.router.push('/authors');
+        this.context.router.history.push("/authors");
     }
-
 
     //// REACT RENDER
     render() {
@@ -96,14 +97,14 @@ export class ManageAuthorPage extends React.Component {
     }
 }
 
-ManageAuthorPage.propTypes =  {
+ManageAuthorPage.propTypes = {
     author: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
 };
 
 // pull in react router context so router is available on this.context.router
 ManageAuthorPage.contextTypes = {
-    router: PropTypes.object // not required in order to avoid linting error from upcoming usage
+    router: PropTypes.object, // not required in order to avoid linting error from upcoming usage
 };
 
 function getAuthorById(authors, id) {
@@ -113,24 +114,26 @@ function getAuthorById(authors, id) {
 }
 
 function mapStateToProps(state, ownProps) {
-    const authorId = ownProps.params.id; // id in path, e.g. /authors/:id
+    const authorId = ownProps.match.params.id; // id in path, e.g. /authors/:id
 
-    let author = {id: '', watchHref: '', title: '', length: '', category: ''};
+    let author = { id: "", watchHref: "", title: "", length: "", category: "" };
 
     if (authorId && state.authors.length > 0) {
         author = getAuthorById(state.authors, authorId);
     }
 
     return {
-//        author: authorFormattedForDropdown(author), // TODO
-        author: author
+        //        author: authorFormattedForDropdown(author), // TODO
+        author: author,
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(authorActions, dispatch)
+        actions: bindActionCreators(authorActions, dispatch),
     };
 }
 
-export default reduxConnect(mapStateToProps, mapDispatchToProps)(ManageAuthorPage);
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(
+    ManageAuthorPage,
+);

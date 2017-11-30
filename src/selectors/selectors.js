@@ -7,6 +7,6 @@ export function authorsFormattedForDropdown(authors) {
 export function authorFormattedForDropdown(author) {
     return {
         value: author.id,
-        text: author.firstName + ' ' + author.lastName
+        text: author.firstName + " " + author.lastName,
     };
 }

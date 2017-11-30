@@ -1,8 +1,9 @@
-import React, {PropTypes} from 'react';
-import { Link, IndexLink } from 'react-router';
-import LoadingDots from './LoadingDots';
+import PropTypes from "prop-types";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import LoadingDots from "./LoadingDots";
 
-const Header = ({loading, courses, authors}) => {
+const Header = ({ loading, courses, authors }) => {
     let courseLink,
         authorLink,
         numCourses = courses.length + 0,
@@ -11,41 +12,61 @@ const Header = ({loading, courses, authors}) => {
     // can't do a goddamn IF inside JSX? fuck you!
     if (numCourses > 0) {
         // for sure this is totally obnoxious...
-        courseLink = <Link to="/courses" activeClassName="active">Courses ({numCourses})</Link>;
+        courseLink = (
+            <NavLink to={"/courses"} activeClassName="active">
+                Courses ({numCourses})
+            </NavLink>
+        );
         // i can't fucking include this in the link above because there can only be one top level element lulz
     } else {
         // add an "Add Course" button in its place
-        courseLink = <Link to="/course" activeClassName="active">Add Course</Link>;
+        courseLink = (
+            <NavLink to={"/course"} activeClassName="active">
+                Add Course
+            </NavLink>
+        );
     }
 
     // can't do a goddamn IF inside JSX? fuck you!
     if (numAuthors > 0) {
         // for sure this is totally obnoxious...
-        authorLink = <Link to="/authors" activeClassName="active">Authors ({numAuthors})</Link>;
+        authorLink = (
+            <NavLink to="/authors" activeClassName="active">
+                Authors ({numAuthors})
+            </NavLink>
+        );
         // i can't fucking include this in the link above because there can only be one top level element lulz
     } else {
         // add an "Add Course" button in its place
-        authorLink = <Link to="/author" activeClassName="active">Add Author</Link>;
+        authorLink = (
+            <NavLink to="/author" activeClassName="active">
+                Add Author
+            </NavLink>
+        );
     }
 
     return (
         <nav>
-            <IndexLink to="/" activeClassName="active">Home</IndexLink>
+            <NavLink to={"/"} activeClassName="active">
+                Home
+            </NavLink>
             {" | "}
             {courseLink}
             {" | "}
             {authorLink}
             {" | "}
-            <Link to="/about" activeClassName="active">About</Link>
+            <NavLink to="/about" activeClassName="active">
+                About
+            </NavLink>
             {loading && <LoadingDots interval={100} dots={20} />}
         </nav>
     );
 };
 
-Header.propTypes  = {
+Header.propTypes = {
     loading: PropTypes.bool.isRequired,
     courses: PropTypes.array.isRequired,
-    authors: PropTypes.array.isRequired
+    authors: PropTypes.array.isRequired,
 };
 
 export default Header;

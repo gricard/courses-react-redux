@@ -1,71 +1,73 @@
-import React, {PropTypes} from 'react';
-import {connect as reduxConnect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import * as courseActions from '../../actions/courseActions';
-import CourseForm from './CourseForm';
-import { authorsFormattedForDropdown } from '../../selectors/selectors';
-import toastr from 'toastr';
-
+import PropTypes from "prop-types";
+import React from "react";
+import { connect as reduxConnect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as courseActions from "../../actions/courseActions";
+import CourseForm from "./CourseForm";
+import { authorsFormattedForDropdown } from "../../selectors/selectors";
+import toastr from "toastr";
 
 // DO NOT WRAP IN withRouter
 // not necessary, and it breaks this.state somehow
-export const ManageCoursePage = React.createClass({ //eslint-disable-line react/prefer-es6-class
+export class ManageCoursePage extends React.Component {
+    //eslint-disable-line react/prefer-es6-class
     // these go in the class body when using createClass
-    propTypes: {
+    static propTypes = {
         course: PropTypes.object.isRequired,
         actions: PropTypes.object.isRequired,
         authors: PropTypes.array.isRequired,
-        route: PropTypes.object.isRequired
-    },
+    };
 
     // pull in react router context so router is available on this.context.router
-    contextTypes: {
-        router: PropTypes.object // not required in order to avoid linting error from upcoming usage
-    },
+    static contextTypes = {
+        router: PropTypes.object, // not required in order to avoid linting error from upcoming usage
+    };
 
     // createClass uses this instead of constructor
-    getInitialState() {
-        // initial component state
-        return {
-            course: Object.assign({}, this.props.course),
-            errors: {},
-            saving: false,
-            deleting: false
-        };
-
-        // don't need to bind when using createClass()
-    },
+    state = {
+        course: Object.assign({}, this.props.course),
+        errors: {},
+        saving: false,
+        deleting: false,
+    };
 
     // need to use componentWillMount instead of componentDidMount
     // when using with createClass
     // so that we get access to the context
     componentWillMount(nextProps, nextContext) {
         if (this.context.router) {
-            this.context.router.setRouteLeaveHook(
-                this.props.route,
-                this.routerWillLeave
+            // setRouteLeaveHook is no longer support in V4
+            // there's sort of a fix in progress https://github.com/ReactTraining/react-router/pull/4372
+            // but for now just use the browser hook directly
+            // TODO this is not working...
+            window.addEventListener(
+                "beforeunload",
+                this.routerWillLeave.bind(this),
             );
         }
-    },
+    }
 
     componentWillReceiveProps(nextProps) {
         // only override the course when we're loading a new one
-        if (this.props.course.id != nextProps.course.id) {
+        if (this.props.course.id !== nextProps.course.id) {
             // populate form when course is loaded directly
-            this.setState({course: Object.assign({}, nextProps.course)}); // make a copy of the course
+            this.setState({ course: Object.assign({}, nextProps.course) }); // make a copy of the course
         }
-    },
+    }
 
-    routerWillLeave(nextLocation) {
-      // return false to prevent a transition w/o prompting the user,
-      // or return a string to allow the user to decide:
-      if (this.state.dirty)
-        return 'Your work is not saved! Are you sure you want to leave?';
-    },
+    routerWillLeave = event => {
+        // return false to prevent a transition w/o prompting the user,
+        // or return a string to allow the user to decide:
+        if (this.state.dirty) {
+            event.returnValue =
+                "Your work is not saved! Are you sure you want to leave?";
+            return event.returnValue;
+        }
+    };
 
     //// Handlers
     // handle events from components
-    handleUpdateCourseState(event) {
+    handleUpdateCourseState = event => {
         const field = event.target.name;
         let course = this.state.course;
         course[field] = event.target.value;
@@ -74,78 +76,79 @@ export const ManageCoursePage = React.createClass({ //eslint-disable-line react/
         // if user changes it and then edits it back to normal the form will still think it's dirty
 
         // mark state as dirty so we can trigger a leave page handler
-        return this.setState({course: course, dirty: true});
-    },
+        return this.setState({ course: course, dirty: true });
+    };
 
-    handleSaveCourse(event) {
+    handleSaveCourse = event => {
         event.preventDefault();
 
         if (!this.courseFormIsValid()) {
             return;
         }
 
-        this.setState({saving: true});
-        this.props.actions.callSaveCourse(this.state.course)
+        this.setState({ saving: true });
+        this.props.actions
+            .callSaveCourse(this.state.course)
             .then(() => {
-                this.setState({dirty: false});
+                this.setState({ dirty: false });
                 this.redirectSave();
             })
             .catch(error => {
-                this.setState({saving: false});
+                this.setState({ saving: false });
                 toastr.error(error);
             });
-    },
+    };
 
-    handleDeleteCourse(event) {
+    handleDeleteCourse = event => {
         //console.log('onDelete event', event);
         event.preventDefault();
 
-        this.setState({deleting: true});
-        this.props.actions.callDeleteCourse(this.state.course)
+        this.setState({ deleting: true });
+        this.props.actions
+            .callDeleteCourse(this.state.course)
             .then(() => {
                 //console.log('after callDeleteCourse action');
-                this.setState({dirty: false});
+                this.setState({ dirty: false });
                 this.redirectDelete();
                 //console.log('redirected');
             })
             .catch(error => {
                 //console.log('caught error in delete hndler', error);
-                this.setState({deleting: false});
+                this.setState({ deleting: false });
                 toastr.error(error);
             });
-    },
-
+    };
 
     //// Helper/utility functions
-    courseFormIsValid() {
+    courseFormIsValid = () => {
         let formIsValid = true;
         let errors = {};
 
         if (this.state.course.title.length < 5) {
-            errors.title = 'Title must be at least 5 characters.';
+            errors.title = "Title must be at least 5 characters.";
             formIsValid = false;
         }
 
-        this.setState({errors: errors});
+        this.setState({ errors: errors });
         return formIsValid;
-    },
+    };
 
-    redirectSave() {
-        this.setState({saving: false});
-        this.redirect('Course Saved');
-    },
+    redirectSave = () => {
+        this.setState({ saving: false });
+        this.redirect("Course Saved");
+    };
 
-    redirectDelete() {
+    redirectDelete = () => {
         //console.log('redirect delete');
-        this.setState({deleting: false});
-        this.redirect('Course Deleted');
-    },
+        this.setState({ deleting: false });
+        this.redirect("Course Deleted");
+    };
 
-    redirect(msg) {
+    redirect = msg => {
         toastr.success(msg);
         // redirect to courses page after save
-        this.context.router.push('/courses');
-    },
+        this.context.router.history.push("/courses");
+    };
 
     render() {
         //console.log('rendering');
@@ -162,8 +165,7 @@ export const ManageCoursePage = React.createClass({ //eslint-disable-line react/
             />
         );
     }
-});
-
+}
 
 // REDUX setup
 
@@ -176,7 +178,7 @@ function getCourseById(courses, id) {
 // REDUX copy app state into properties used by components
 function mapStateToProps(state, ownProps) {
     //console.log('mapStateToProps', state);
-    const courseId = ownProps.params.id; // id in path, e.g. /courses/:id
+    const courseId = ownProps.match.params.id; // id in path, e.g. /courses/:id
 
     let course = null;
 
@@ -188,7 +190,14 @@ function mapStateToProps(state, ownProps) {
     // deleted courses will be null when this is called
     // TODO why is this called when we're trying to redirect, not load this page again?
     if (course === null) {
-        course = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
+        course = {
+            id: "",
+            watchHref: "",
+            title: "",
+            authorId: "",
+            length: "",
+            category: "",
+        };
         //console.log('new empty course', course);
     } else {
         //console.log('course is not null?', course);
@@ -196,7 +205,7 @@ function mapStateToProps(state, ownProps) {
 
     return {
         course: course,
-        authors: authorsFormattedForDropdown(state.authors)
+        authors: authorsFormattedForDropdown(state.authors),
     };
 }
 
@@ -206,9 +215,11 @@ function mapDispatchToProps(dispatch) {
     //console.log('mapDispatchToProps', dispatch);
     return {
         // attach actions/THUNKS to props
-        actions: bindActionCreators(courseActions, dispatch)
+        actions: bindActionCreators(courseActions, dispatch),
     };
 }
 
 // REDUX - connect() hooks the component up to redux to give it state and actions
-export default reduxConnect(mapStateToProps, mapDispatchToProps)(ManageCoursePage);
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(
+    ManageCoursePage,
+);
