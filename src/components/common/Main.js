@@ -10,11 +10,7 @@ import NotFoundPage from "../common/NotFoundPage";
 import RouteCourseManage from "../course/RouteCourseManage"; //eslint-disable-line import/no-named-as-default
 import RouteAuthorManage from "../author/RouteAuthorManage"; //eslint-disable-line import/no-named-as-default
 
-// The Main component renders one of the three provided
-// Routes (provided that one matches). Both the /roster
-// and /schedule routes will match any pathname that starts
-// with /roster or /schedule. The / route will only match
-// when the pathname is exactly the string "/"
+// The Main component renders one of the provided routes
 const Main = () => (
     <main>
         <Switch>
