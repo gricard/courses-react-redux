@@ -6,6 +6,7 @@ import * as courseActions from "../../actions/courseActions";
 import CourseForm from "./CourseForm";
 import { authorsFormattedForDropdown } from "../../selectors/selectors";
 import toastr from "toastr";
+import { Prompt } from "react-router-dom";
 
 // DO NOT WRAP IN withRouter
 // not necessary, and it breaks this.state somehow
@@ -31,22 +32,6 @@ export class ManageCoursePage extends React.Component {
         deleting: false,
     };
 
-    // need to use componentWillMount instead of componentDidMount
-    // when using with createClass
-    // so that we get access to the context
-    componentWillMount(nextProps, nextContext) {
-        if (this.context.router) {
-            // setRouteLeaveHook is no longer support in V4
-            // there's sort of a fix in progress https://github.com/ReactTraining/react-router/pull/4372
-            // but for now just use the browser hook directly
-            // TODO this is not working...
-            window.addEventListener(
-                "beforeunload",
-                this.routerWillLeave.bind(this),
-            );
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         // only override the course when we're loading a new one
         if (this.props.course.id !== nextProps.course.id) {
@@ -54,16 +39,6 @@ export class ManageCoursePage extends React.Component {
             this.setState({ course: Object.assign({}, nextProps.course) }); // make a copy of the course
         }
     }
-
-    routerWillLeave = event => {
-        // return false to prevent a transition w/o prompting the user,
-        // or return a string to allow the user to decide:
-        if (this.state.dirty) {
-            event.returnValue =
-                "Your work is not saved! Are you sure you want to leave?";
-            return event.returnValue;
-        }
-    };
 
     //// Handlers
     // handle events from components
@@ -151,18 +126,23 @@ export class ManageCoursePage extends React.Component {
     };
 
     render() {
-        //console.log('rendering');
         return (
-            <CourseForm
-                allAuthors={this.props.authors}
-                onChange={this.handleUpdateCourseState}
-                onSave={this.handleSaveCourse}
-                onDelete={this.handleDeleteCourse}
-                course={this.state.course}
-                errors={this.state.errors}
-                saving={this.state.saving}
-                deleting={this.state.deleting}
-            />
+            <div>
+                <CourseForm
+                    allAuthors={this.props.authors}
+                    onChange={this.handleUpdateCourseState}
+                    onSave={this.handleSaveCourse}
+                    onDelete={this.handleDeleteCourse}
+                    course={this.state.course}
+                    errors={this.state.errors}
+                    saving={this.state.saving}
+                    deleting={this.state.deleting}
+                />
+                <Prompt
+                    when={this.state.dirty}
+                    message="Your work is not saved! Are you sure you want to leave?"
+                />
+            </div>
         );
     }
 }
