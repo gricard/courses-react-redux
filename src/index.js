@@ -26,12 +26,12 @@ render(
 );
 
 if (module.hot) {
-    module.hot.accept('./components/App', () => {
+    module.hot.accept("./components/App", () => {
         render(
             <BrowserRouter>
                 <App store={store} />
             </BrowserRouter>,
             document.getElementById("app"),
-        )
-    })
+        );
+    });
 }

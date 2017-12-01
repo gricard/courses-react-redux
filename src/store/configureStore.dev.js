@@ -14,12 +14,11 @@ export default function configureStore(initialState) {
         applyMiddleware(thunk, reduxImmutableStateInvariant()),
     );
 
-
     if (process.env.NODE_ENV !== "production") {
         if (module.hot) {
-            module.hot.accept('../reducers/index', () => {
-                store.replaceReducer(rootReducer)
-            })
+            module.hot.accept("../reducers/index", () => {
+                store.replaceReducer(rootReducer);
+            });
         }
     }
 
